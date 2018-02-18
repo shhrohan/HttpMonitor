@@ -39,22 +39,27 @@ public class HttpCodeProducer {
 
 	public static void start() {
 		init();
-		Random r = new Random();
 		Integer[] values =  new Integer[] {500,200};
 		System.out.println("[Producer Started...]");
-		for(int i= 0 ; i< 1 ; i++) {
-			int selectedRegion = r.nextInt(4);
-			String region =  "region_"+ selectedRegion;
-			Iterator<Integer> nodeIterator = regionMap.get(region).iterator();
-			Integer selectedNode =  r.nextInt(250);
-			Integer nodeId = -1;
-			while(selectedNode > 0) {
-				nodeId = nodeIterator.next();
-				selectedNode--;
+		Random r = new Random();
+		try {
+			while(true) {
+				Thread.sleep(50l);
+				int selectedRegion = r.nextInt(4);
+				String region =  "region_"+ selectedRegion;
+				Iterator<Integer> nodeIterator = regionMap.get(region).iterator();
+				Integer selectedNode =  r.nextInt(250);
+				Integer nodeId = -1;
+				while(selectedNode > 0) {
+					nodeId = nodeIterator.next();
+					selectedNode--;
+				}
+				ProducerThread t = new ProducerThread(region, nodeId, prop.getProperty("attribute"),
+						values[r.nextInt(2)]);
+				t.start();
 			}
-			
-			ProducerThread t = new ProducerThread(region, nodeId, prop.getProperty("attribute"), values[r.nextInt(2)]);
-			t.start();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
 	}
 	

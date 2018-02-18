@@ -35,7 +35,7 @@ public class ProducerThread extends Thread {
 			Event msg = new Event(this.region, this.node_Id, this.attribute, this.value,
 					new Timestamp(new Date().getTime()));
 			producer.send(new ProducerRecord<String, Event>(Constants.KAFKA_TOPIC, msg));
-			System.out.println("Sent :" + msg.region +" [Node:" + msg.nodeId+"] [code:" + this.value+"]");
+			//System.out.println("Sent :" + msg.region +" [Node:" + msg.nodeId+"] [code:" + this.value+"]");
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

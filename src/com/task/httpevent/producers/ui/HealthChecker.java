@@ -24,6 +24,7 @@ public class HealthChecker {
 		init();
 		while(true) {
 			try {
+				Thread.sleep(2500l);
 				Timestamp t = getTimeStampForCurrentMinute();
 				Map<String,Map<Integer,Long>> healthMap = EventHandler.getHealthMap().get(t);
 				if(healthMap != null) {
@@ -33,19 +34,18 @@ public class HealthChecker {
 						String region = e.getKey();
 						Map<Integer,Long> regionHealthMap = e.getValue();
 						Long fives = regionHealthMap.get(500)  == null ? 0 : regionHealthMap.get(500) ;
-						Long twos = regionHealthMap.get(200) == null ? 1 : regionHealthMap.get(500);
+						Long twos = regionHealthMap.get(200) == null ? 1 : regionHealthMap.get(200);
 						
-						Float ratio = (float) (fives/twos);
-						status.append("["+region + ":" + numberFormat.format(ratio)+"]");
+						Float ratio = ((float)fives)/((float)twos);
+						status.append("["+region + "[500 -> " + fives +", 200 -> " + twos +"]:[Ratio=" + numberFormat.format(ratio)+"]");
 						if(ratio > threshold) {
-							status.append("[ALERT]");
+							status.append("[>"+ threshold +"][**** ALERT ****]");
 						}
 						status.append("\n");
 					}
 					status.append("############### ######## ##############\n");
 					System.out.println(status.toString());
 				}
-				Thread.sleep(1000l);
 			}
 			catch(Exception ex) {
 				System.err.println("Error in Health Checker. Retrying...");

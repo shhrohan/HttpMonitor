@@ -20,7 +20,6 @@ public class HttpCodeConsumer {
 		while (true) {
 			ConsumerRecords<String, Event> records = kafkaConsumer.poll(100);
 			for (ConsumerRecord<String, Event> record : records) {
-				System.out.println("received...");
 				EventHandler.handle(record.value());
 			}
 			kafkaConsumer.commitSync();
